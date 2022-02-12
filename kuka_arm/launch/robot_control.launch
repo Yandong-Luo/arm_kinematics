@@ -1,0 +1,32 @@
+<launch>
+  <!--Load the joint controllers to param server-->
+  <!-- <rosparam file="$(find kuka_arm)/config/kr210_controllers.yaml" command="load"/> -->
+
+  <rosparam file="$(find kuka_arm)/config/my_kuka_arm.yaml" command="load"/>
+
+  <!--Load controllers-->
+  <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+    output="screen" ns="/kuka_arm" args="joint_state_controller left_gripper_finger_joint_controller right_gripper_finger_joint_controller joint1_arm_controller
+                        joint2_arm_controller
+                        joint3_arm_controller
+                        joint4_arm_controller
+                        joint5_arm_controller
+                        joint6_arm_controller"/>
+
+
+  <!-- Load joint controller configurations from YAML file to parameter server -->
+  <!-- <rosparam file="$(find rrbot_control)/config/rrbot_control.yaml" command="load"/> -->
+
+  <!-- load the controllers -->
+  <!-- <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+	output="screen" ns="/rrbot" args="joint_state_controller
+					  joint1_position_controller
+					  joint2_position_controller"/> -->
+
+  <!-- convert joint states to TF transforms for rviz, etc -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
+	respawn="false" output="screen">
+    <remap from="/joint_states" to="/kuka_arm/joint_states" />
+  </node>
+
+</launch>
